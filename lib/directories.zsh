@@ -25,8 +25,10 @@ alias d='dirs -v | head -10'
 
 # List directory contents
 alias lsa='ls -lah'
-alias l='ls -lah --group-directories-first'
-alias ll='ls -lh --group-directories-first'
+alias lsbase='ls -l --group-directories-first'
+alias l='lsbase -h'
+alias ll='l -A'
+alias lll='lsbase -A'
 alias la='ls -lAh'
 
 # Push and pop directories on directory stack
