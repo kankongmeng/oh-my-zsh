@@ -8,7 +8,7 @@ ugw() {
     gradle w
     git checkout build.gradle
     git checkout settings.gradle
-    sed -i "s/-bin\.zip/-all\.zip/g" gradle/wrapper/gradle-wrapper.properties
+    sed -i '' "s/-bin\.zip/-all\.zip/g" gradle/wrapper/gradle-wrapper.properties
     git add gradle
     git commit -m"Update Gradle wrapper to $*"
 }
@@ -22,7 +22,7 @@ ufl() {
 
 # Update Android Gradle plugin
 uagp() {
-    sed -i "s#.build:gradle:[[:digit:]].[[:digit:]].[[:digit:]]#.build:gradle:$*#g" build.gradle
+    sed -i '' "s#.build:gradle:[[:digit:]].[[:digit:]].[[:digit:]]#.build:gradle:$*#g" build.gradle
     git add build.gradle
     git commit -m"Update Android Gradle plugin to $*"
 }
@@ -119,11 +119,11 @@ n() {
 }
 
 replacelines() {
-  ack "$1" -l --print0 | xargs -0 -n 1 sed -i "s/$1/$2/g";
+  ack "$1" -l --print0 | xargs -0 -n 1 gsed -i "s/$1/$2/g";
 }
 
 deletelines() {
-  ack "$1" -l --print0 | xargs -0 -n 1 sed -i "/$1/d";
+  ack "$1" -l --print0 | xargs -0 -n 1 gsed -i "/$1/d";
 }
 
 git_branch_color() {
@@ -163,14 +163,14 @@ git_branch_info() {
       fi
       git config --get branch.$branch.remote >/dev/null 2>&1
       if [[ $? -eq 0 ]]; then
-        diverged=$(command git log @{u}... --oneline | wc -l)
+        diverged=$(command git log @{u}... --oneline | wc -l | tr -d ' ')
         if [[ $diverged -ne 0 ]]; then
           echo -ne "%{$fg_bold[yellow]%}"
-          ahead=$(command git log @{u}.. --oneline | wc -l)
+          ahead=$(command git log @{u}.. --oneline | wc -l | tr -d ' ')
           if [[ $ahead -eq $diverged ]]; then
             echo -ne "↑ $ahead"
           else
-            behind=$(command git log ..@{u} --oneline | wc -l)
+            behind=$(command git log ..@{u} --oneline | wc -l | tr -d ' ')
             if [[ $behind -eq $diverged ]]; then
               echo -ne "↓ $behind"
             else
