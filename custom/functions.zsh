@@ -1,6 +1,29 @@
 # Make dir and cd into it
 #md() { mkdir -p "$@" && cd "$@"; }
 
+proxy() {
+  case "$1" in
+    on|sp)
+      local SP_PROXY="http://proxy.singaporepower.com.sg:8080"
+      export http_proxy=$SP_PROXY
+      export https_proxy=$SP_PROXY
+      export HTTP_PROXY=$SP_PROXY
+      export HTTPS_PROXY=$SP_PROXY
+      export no_proxy=login.system.vpcf-qa.in.spdigital.io,api.system.vpcf-qa.in.spdigital.io,localhost,127.0.0.1,graylog.in.spdigital.io
+      ;;
+    off|none)
+      unset http_proxy
+      unset https_proxy
+      unset HTTP_PROXY
+      unset HTTPS_PROXY
+      unset no_proxy
+      ;;
+    *)
+      echo "Usage: proxy sp|none"
+      ;;
+  esac
+}
+
 # Update Gradle wrapper
 ugw() {
     echo "task w(type:Wrapper){gradleVersion='$*'}" > build.gradle
@@ -186,5 +209,11 @@ git_branch_info() {
 ssh_status() {
   if [[ -n $SSH_CONNECTION ]]; then
     echo -ne "%{$reset_color%}:%{$fg[magenta]%}SSH!"
+  fi
+}
+
+proxy_status() {
+  if [[ -n $HTTP_PROXY ]]; then
+    echo -ne "%{$reset_color%}:%{$fg[magenta]%}PROXY!"
   fi
 }
