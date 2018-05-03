@@ -1,6 +1,14 @@
 # Make dir and cd into it
 #md() { mkdir -p "$@" && cd "$@"; }
 
+reload() {
+local zshrc="$HOME/.zshrc"
+if [[ -n "$1" ]]; then
+	  zshrc="$1"
+  fi
+  source "$zshrc"
+}
+
 proxy() {
   case "$1" in
     on|sp)
